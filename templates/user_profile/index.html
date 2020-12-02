@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% load static %} {% block styles %}
+<!-- Custom styles for this template -->
+<!-- <link href="/static/signin.css" rel="stylesheet" /> -->
+{% endblock %} {% block content %}
+<body>
+  <div id="app"></div>
+  {% load static %} {% if debug %}
+  <script src="{% static 'user_profile/build/main.js' %}"></script>
+  {% else %} {% endif %}
+</body>
+{% endblock %}
