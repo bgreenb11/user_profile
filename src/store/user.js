@@ -15,10 +15,12 @@ export const getUser = createAsyncThunk(
       config.headers["Authorization"] = `Token ${token}`;
     }
 
-    axios
+    const response = axios
       .get("/api/auth/user", config)
       .then((res) => res.data)
       .catch((err) => rejectWithValue({ err }));
+
+    return response;
   }
 );
 
