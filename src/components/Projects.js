@@ -8,6 +8,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -21,6 +22,9 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import ProjectForm from "./ProjectForm";
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    margin: theme.spacing(1),
+  },
   add_icon: {
     marginLeft: theme.spacing(2),
   },
@@ -30,15 +34,16 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     textAlign: "center",
     margin: theme.spacing(1),
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
   },
   card_link: {
     "&:hover": {
       color: "white",
     },
     marginLeft: "auto",
+  },
+  chip: {
+    margin: theme.spacing(1),
+    borderColor: "white",
   },
   edit_icon: {
     position: "absolute",
@@ -68,15 +73,14 @@ function Projects(props) {
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const projects = useSelector((state) => state.projects.projects);
-  console.log(user);
 
   return (
     <Fragment>
-      <Typography variant="h1" component="h2">
+      <Typography variant="h1" component="h2" className={classes.title}>
         Projects
       </Typography>
       <Divider variant="middle" />
-      {isAuthenticated && (
+      {user && isAuthenticated && (
         <IconButton className={classes.add_icon} onClick={() => setEdit(true)}>
           <EditIcon />
         </IconButton>
@@ -97,6 +101,17 @@ function Projects(props) {
               image={p.image}
             />
             <CardContent>
+              {p.attributes &&
+                p.attributes
+                  .split(",")
+                  .map((attr) => (
+                    <Chip
+                      label={attr}
+                      key={`${attr.toLowerCase()}_chip`}
+                      className={classes.chip}
+                      variant="outlined"
+                    />
+                  ))}
               <Typography variant="body2" color="textSecondary" component="p">
                 {p.description}
               </Typography>

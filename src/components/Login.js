@@ -52,6 +52,11 @@ function Login(props) {
     password: "",
   });
 
+  const [error, setError] = React.useState({
+    username: false,
+    password: false,
+  });
+
   const handleClose = () => {
     setData({
       username: "",
@@ -68,8 +73,15 @@ function Login(props) {
   };
 
   const handleSubmit = () => {
-    dispatch(login(data));
-    handleClose();
+    if (data.username === "" || data.password === "") {
+      setError({
+        username: data.username === "",
+        password: data.password === "",
+      });
+    } else {
+      dispatch(login(data));
+      handleClose();
+    }
   };
 
   return (
@@ -96,6 +108,7 @@ function Login(props) {
             value={data.username}
             label="Username"
             onChange={handleChange}
+            error={error.username}
             required
           />
           <br />
@@ -107,6 +120,7 @@ function Login(props) {
             value={data.password}
             label="Password"
             onChange={handleChange}
+            error={error.password}
             required
           />
           <br />

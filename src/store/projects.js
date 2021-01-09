@@ -35,10 +35,12 @@ const projectsSlice = createSlice({
         url: "https://github.com/bgreenb11/2019fall_scarlet-witch",
         example: "",
         user: "ben",
-        components: ["Vue", "Vuex", "Electron"],
-        description: `This impressive paella is a perfect party dish and a fun meal to
-        cook together with your guests. Add 1 cup of frozen peas along
-        with the mussels, if you like.`,
+        attributes: "Vue,Vuex,Electron",
+        description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+        Officiis sequi, perspiciatis ex quidem soluta alias ducimus. 
+        Delectus laudantium id ad deleniti! Voluptatum aut incidunt, 
+        ducimus omnis amet neque, accusamus rerum, atque repudiandae eos voluptatem! 
+        Quia, sit laboriosam culpa dolorem sunt placeat odit.`,
       },
       {
         title: "Classmate Connect",
@@ -46,9 +48,8 @@ const projectsSlice = createSlice({
         url: "https://github.com/bgreenb11/ClassmateConnect",
         example: "",
         user: "ben",
-        components: ["Python", "Django"],
-        description: ` 1 cup of frozen peas along
-        with the mussels, if you like.`,
+        attributes: "Python,Django",
+        description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, dolorem?`,
       },
       {
         title: "dotfiles",
@@ -56,9 +57,9 @@ const projectsSlice = createSlice({
         url: "https://github.com/bgreenb11/dotfiles/",
         example: "",
         user: "ben",
-        components: ["Vim", "Zsh", "Tmux"],
-        description: `This impressive paella is a perfect party dish and a fun meal to
-        cook together with your guests. `,
+        attributes: "Vim,Zsh,Tmux",
+        description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+        Modi sunt esse deleniti atque pariatur, fugit voluptatem reiciendis dolorem labore deserunt!`,
       },
       {
         title: "HPC Usage Data",
@@ -66,9 +67,9 @@ const projectsSlice = createSlice({
         url: "",
         example: "https://oit.utk.edu/hpsc/overview/system-usage/",
         user: "ben",
-        components: ["Python", "Plotly", "Django"],
-        description: `Add 1 cup of frozen peas along
-        with the mussels, if you like.`,
+        attributes: "Python,Plotly,Django",
+        description: `Lorem ipsum dolor sit amet consectetur adipisicing elit.
+         Labore illum excepturi quam unde iste quis!`,
       },
     ],
     loading: "idle",

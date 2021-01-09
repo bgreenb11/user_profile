@@ -10,7 +10,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AppsIcon from "@material-ui/icons/Apps";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/user";
 import Login from "./Login";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,8 +35,13 @@ function Header(props) {
   const classes = useStyles();
   const navbar_title = "Ben Greenberg Portfolio";
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const handleLogout = () => {
+    dispatch(logout(token));
+  };
 
   return (
     <Fragment>
@@ -58,15 +64,15 @@ function Header(props) {
             </Typography>
           </Link>
           {user && isAuthenticated ? (
-            <Link
-              href="/accounts/logout"
+            <Button
               color="inherit"
+              onClick={() => handleLogout()}
               className={classes.auth}
             >
               <Typography variant="h6" color="inherit" noWrap>
                 Logout
               </Typography>
-            </Link>
+            </Button>
           ) : (
             <Button
               color="inherit"
