@@ -52,16 +52,12 @@ function App(props) {
 
   const classes = useStyles();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const token = useSelector((state) => state.user.token);
 
-  const getCurrentUser = async () => {
-    const actionResult = await dispatch(getUser());
-    if (getUser.fulfilled.match(actionResult)) {
-      const currentUser = actionResult.payload;
-      // console.log(currentUser);
-      return currentUser;
-    }
-  };
+  React.useEffect(() => {
+    console.log("Token", token);
+    dispatch(getUser(token));
+  }, []);
 
   return (
     <ThemeProvider theme={profileTheme}>

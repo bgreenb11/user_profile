@@ -13,14 +13,15 @@ export const getUser = createAsyncThunk(
     // If token, add to headers config
     if (token) {
       config.headers["Authorization"] = `Token ${token}`;
+      console.log(token);
     }
 
-    const response = axios
-      .get("/api/auth/user", config)
-      .then((res) => res.data)
-      .catch((err) => rejectWithValue({ err }));
-
-    return response;
+    try {
+      const response = await axios.get("/api/auth/user", config);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -35,7 +36,7 @@ export const login = createAsyncThunk(
 
     const body = JSON.stringify({ username, password });
 
-    const response = axios
+    const response = await axios
       .post("/api/auth/login", body, config)
       .then((res) => res.data)
       .catch((err) => rejectWithValue({ err }));
@@ -43,6 +44,29 @@ export const login = createAsyncThunk(
     return response;
   }
 );
+
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (token, { rejectWithValue }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    // If token, add to headers config
+    if (token) {
+      config.headers["Authorization"] = `Token ${token}`;
+    }
+
+    try {
+      const response = await axios.post("/api/auth/logout/", null, config);
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -57,15 +81,15 @@ const userSlice = createSlice({
     [getUser.pending]: (state) => {
       if (state.loading === "idle") {
         state.user = null;
-        state.loading = "pending";
         state.error = null;
+        state.loading = "pending";
       }
     },
     [getUser.fulfilled]: (state, { payload }) => {
       if (state.loading === "pending") {
+        state.user = payload;
+        state.isAuthenticated = true;
         state.loading = "idle";
-        state.user = payload.user;
-        state.loading = "fulfilled";
       }
     },
     [getUser.rejected]: (state, { payload }) => {
@@ -78,30 +102,50 @@ const userSlice = createSlice({
     [login.pending]: (state) => {
       if (state.loading === "idle" && !state.isAuthenticated) {
         state.user = null;
+        state.error = null;
         state.loading = "pending";
-        state.error = null;
       } else {
-        state.loading = "fulfilled";
         state.error = null;
+        state.loading = "fulfilled";
       }
     },
     [login.fulfilled]: (state, { payload }) => {
       if (state.loading === "pending") {
-        console.log(payload);
         localStorage.setItem("token", payload.token);
-
-        state.loading = "idle";
         state.user = payload.user;
         state.token = localStorage.getItem("token");
         state.isAuthenticated = true;
-        state.loading = "fulfilled";
+        state.loading = "idle";
       }
     },
     [login.rejected]: (state, { payload }) => {
       if (state.loading === "pending") {
+        localStorage.removeItem("token");
+        state.token = null;
         state.user = null;
-        state.error = payload.error;
         state.isAuthenticated = false;
+        state.error = payload.error;
+        state.loading = "idle";
+      }
+    },
+    [logout.pending]: (state) => {
+      if (state.loading === "idle") {
+        state.error = null;
+        state.loading = "pending";
+      }
+    },
+    [logout.fulfilled]: (state) => {
+      if (state.loading === "pending") {
+        localStorage.removeItem("token");
+        state.token = null;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.loading = "idle";
+      }
+    },
+    [logout.rejected]: (state, { payload }) => {
+      if (state.loading === "pending") {
+        state.error = payload.error;
         state.loading = "idle";
       }
     },

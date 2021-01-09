@@ -47,6 +47,7 @@ function AddProjectForm(props) {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      overflow: "scroll",
     },
     paper: {
       border: "2px solid #000",
@@ -72,17 +73,22 @@ function AddProjectForm(props) {
     title: "",
     url: "",
     example: "",
-    image: "",
+    image: "/static/user_profile/assets/github.png",
     user: isAuthenticated ? user.username : "",
-    components: [],
+    attributes: "",
     description: ``,
   };
 
   const [project, setProject] = useState(baseProject);
 
+  const [error, setError] = useState({
+    title: false,
+    url: false,
+    example: false,
+  });
+
   const projectSelect = (e) => {
     setIndex(e.target.value);
-    console.log(index);
     if (e.target.value > -1) {
       setProject(projects[e.target.value]);
     } else {
@@ -96,14 +102,6 @@ function AddProjectForm(props) {
     props.handleClose();
   };
 
-  const handleSubmit = () => {
-    console.log(project, index);
-    dispatch(
-      index > -1 ? editProject({ project, index }) : addProjectTemp(project)
-    );
-    handleClose();
-  };
-
   const handleChange = (e) => {
     const target = e.target;
     const val = target.type === "file" ? target.files[0] : target.value;
@@ -114,6 +112,42 @@ function AddProjectForm(props) {
       ...project,
       [name]: target.type !== "file" ? val : URL.createObjectURL(val),
     });
+  };
+
+  const validURL = (str) => {
+    let pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return str === "" || !!pattern.test(str);
+  };
+
+  const validateProject = () => {
+    setError({
+      title: project.title === "",
+      url: !validURL(project.url),
+      example: !validURL(project.example),
+    });
+  };
+
+  const handleSubmit = () => {
+    if (
+      project.title === "" ||
+      !validURL(project.url) ||
+      !validURL(project.example)
+    ) {
+      validateProject();
+    } else {
+      dispatch(
+        index > -1 ? editProject({ project, index }) : addProjectTemp(project)
+      );
+      handleClose();
+    }
   };
 
   return (
@@ -156,6 +190,8 @@ function AddProjectForm(props) {
             value={project.title}
             label="Project Title"
             onChange={handleChange}
+            error={error.title}
+            helperText={error.title ? "Title cannot be empty" : ""}
             required
           />
           <br />
@@ -166,6 +202,8 @@ function AddProjectForm(props) {
             value={project.url}
             label="Git Repo?"
             onChange={handleChange}
+            error={error.url}
+            helperText={error.url ? "Code source must be a link." : ""}
           />
           <br />
           <TextField
@@ -174,6 +212,31 @@ function AddProjectForm(props) {
             name="example"
             value={project.example}
             label="Alt/Example Page"
+            onChange={handleChange}
+            error={error.example}
+            helperText={error.example ? "Example must be a link." : ""}
+          />
+          <br />
+          <TextField
+            variant="filled"
+            multiline
+            rows={4}
+            id="description"
+            name="description"
+            value={project.description}
+            label="Project Description"
+            onChange={handleChange}
+          />
+          <br />
+          <TextField
+            variant="filled"
+            multiline
+            rows={4}
+            id="attributes"
+            name="attributes"
+            value={project.attributes}
+            label="Project Attributes"
+            placeholder="Please enter attributes separated by commas."
             onChange={handleChange}
           />
           <br />
@@ -218,11 +281,7 @@ function AddProjectForm(props) {
               </Grid>
             </Grid>
           )}
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => handleSubmit()}
-          >
+          <Button variant="outlined" color="primary" onClick={handleSubmit}>
             Submit
           </Button>
         </form>
