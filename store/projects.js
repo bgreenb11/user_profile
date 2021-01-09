@@ -82,6 +82,9 @@ const projectsSlice = createSlice({
         a.title.toLowerCase().localeCompare(b.title.toLowerCase())
       );
     },
+    deleteProject: (state, { payload }) => {
+      state.projects = state.projects.filter((p) => p.title !== payload.title);
+    },
     editProject: (state, { payload }) => {
       state.projects[payload.index] = payload.project;
     },
@@ -108,6 +111,10 @@ const projectsSlice = createSlice({
   },
 });
 
-export const { addProjectTemp, editProject } = projectsSlice.actions;
+export const {
+  addProjectTemp,
+  editProject,
+  deleteProject,
+} = projectsSlice.actions;
 
 export default projectsSlice.reducer;

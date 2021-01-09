@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { addProjectTemp, editProject } from "../store/projects";
+import { addProjectTemp, editProject, deleteProject } from "../store/projects";
 
 function AddProjectForm(props) {
   const profileTheme = useTheme();
@@ -150,6 +150,12 @@ function AddProjectForm(props) {
     }
   };
 
+  const handleDelete = () => {
+    dispatch(deleteProject(project));
+    setIndex(-1);
+    setProject(baseProject);
+  };
+
   return (
     <Modal
       className={classes.modal}
@@ -280,6 +286,11 @@ function AddProjectForm(props) {
                 </Card>
               </Grid>
             </Grid>
+          )}
+          {projects.map((p) => p.title).includes(project.title) && (
+            <Button variant="outlined" color="secondary" onClick={handleDelete}>
+              Delete Project
+            </Button>
           )}
           <Button variant="outlined" color="primary" onClick={handleSubmit}>
             Submit

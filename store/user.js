@@ -60,7 +60,7 @@ export const logout = createAsyncThunk(
     }
 
     try {
-      const response = await axios.post("/api/auth/logout/", null, config);
+      await axios.post("/api/auth/logout/", null, config);
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

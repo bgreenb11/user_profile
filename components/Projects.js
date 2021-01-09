@@ -1,10 +1,9 @@
 import React, { Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
   Card,
   CardActions,
-  CardActionArea,
   CardContent,
   CardHeader,
   CardMedia,
@@ -12,7 +11,6 @@ import {
   Divider,
   Grid,
   IconButton,
-  Link,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
